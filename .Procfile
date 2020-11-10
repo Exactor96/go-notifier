@@ -1,1 +1,1 @@
-web: go-notifier
+web: bin/src
