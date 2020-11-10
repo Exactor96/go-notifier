@@ -1,15 +1,30 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
 	"os"
+	"strconv"
 )
 
+type Profile struct {
+	Name    string
+	Hobbies []string
+}
+
 func homePage(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Welcome to the HomePage!")
-	fmt.Println("Endpoint Hit: homePage")
+	profile := Profile{"Alex", []string{"snowboarding", "programming"}}
+
+	js, err := json.Marshal(profile)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(js)
 }
 
 func handleRequests() {
@@ -19,7 +34,8 @@ func handleRequests() {
 	if dev == "1" {
 		port = 8080
 	} else {
-		port = 5000
+		envport := os.Getenv("PORT")
+		port, _ = strconv.Atoi(envport)
 	}
 	fmt.Println(fmt.Sprintf("Working on port: %d", port))
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", port), nil))
