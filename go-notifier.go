@@ -19,7 +19,7 @@ func handleRequests() {
 	if dev == "1" {
 		port = 8080
 	} else {
-		port = 80
+		port = 5000
 	}
 	fmt.Println(fmt.Sprintf("Working on port: %d", port))
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", port), nil))
